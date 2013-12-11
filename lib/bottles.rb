@@ -1,6 +1,8 @@
-require_relative 'miracle'
+require_relative '../lib/miracle'
+require 'forwardable'
 
 class BottlesSong
+
   def sing
     verses(99, 0)
   end
@@ -10,15 +12,13 @@ class BottlesSong
   end
 
   def verse(number)
-    bottle_number = number.to_container_number
-    "#{bottle_number} of beer #{location}, ".capitalize +
-    "#{bottle_number} of beer.\n" +
-    "#{bottle_number.action}, " +
-    "#{bottle_number.pred} of beer #{location}.\n"
-  end
+    starting_bottle_num = number.to_bottle_num
+    ending_bottle_num   = starting_bottle_num.pred
 
-  def location
-    'on the wall'
+    "#{starting_bottle_num} of beer on the wall, ".capitalize +
+    "#{starting_bottle_num} of beer.\n" +
+    "#{starting_bottle_num.action}, " +
+    "#{ending_bottle_num} of beer on the wall.\n"
   end
-
 end
+

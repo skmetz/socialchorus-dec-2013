@@ -1,127 +1,70 @@
 require 'delegate'
 
 class Fixnum
-  def to_container_number
-    begin
-      Object.const_get("ContainerNumber#{self}")
-    rescue NameError
-      ContainerNumber
+  def to_bottle_num
+    case self
+    when 0
+      BottleNumber0
+    when 1
+      BottleNumber1
+    else
+      BottleNumber
     end.new(self)
   end
 end
 
-class ContainerNumber < SimpleDelegator
-  def pred
-    __getobj__.pred.to_container_number
-  end
+class BottleNumber < SimpleDelegator
 
   def to_s
-    "#{inventory} #{container}"
-  end
-
-  def container
-    'bottles'
+   "#{inventory} #{container}"
   end
 
   def inventory
     __getobj__.to_s
   end
 
-  def action
-    'Take one down and pass it around'
-  end
-end
-
-class ContainerNumber0 < ContainerNumber
-  def inventory
-    'no more'
-  end
-
-  def action
-    'Go to the store and buy some more'
-  end
-
-  def pred
-    99.to_container_number
-  end
-end
-
-class ContainerNumber1 < ContainerNumber
-  def container
-    'bottle'
-  end
-
-  def action
-    'Take it down and pass it around'
-  end
-end
-
-
-require 'delegate'
-
-class Fixnum
-  def to_container_number
-    begin
-      Object.const_get("ContainerNumber#{self}")
-    rescue NameError
-      ContainerNumber
-    end.new(self)
-  end
-end
-
-class ContainerNumber < SimpleDelegator
-  def pred
-    __getobj__.pred.to_container_number
-  end
-
-  def to_s
-    "#{inventory} #{container}"
-  end
-
   def container
     'bottles'
   end
 
-  def inventory
-    __getobj__.to_s
+  def action
+    "Take #{pronoun} down and pass it around"
   end
 
-  def action
-    'Take one down and pass it around'
+  def pronoun
+    if self == 1
+      'it'
+    else
+      'one'
+    end
+  end
+
+  def pred
+    __getobj__.pred.to_bottle_num
   end
 end
 
-class ContainerNumber0 < ContainerNumber
+class BottleNumber0 < BottleNumber
   def inventory
     'no more'
   end
 
   def action
-    'Go to the store and buy some more'
+    "Go to the store and buy some more"
   end
 
   def pred
-    99.to_container_number
+    99.to_bottle_num
   end
 end
 
-class ContainerNumber1 < ContainerNumber
+class BottleNumber1 < BottleNumber
   def container
     'bottle'
   end
 
-  def action
-    'Take it down and pass it around'
+  def pronoun
+    'it'
   end
 end
 
-puts "\n\n"
-b0 = ContainerNumber0.new(0)
-b1 = ContainerNumber1.new(1)
-b7 = ContainerNumber.new(7)
-puts "ContainerNumber0 #{b0.inventory} #{b0.container}"
-puts "ContainerNumber1 #{b1.inventory} #{b1.container}"
-puts "ContainerNumber7 #{b7.inventory} #{b7.container}"
-puts "pred of ContainerNumber1 #{b1.pred.to_s}"
-puts "pred of ContainerNumber0 #{b0.pred.to_s}"
-puts "\n\n"
